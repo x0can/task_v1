@@ -1,14 +1,18 @@
 const assert = require("assert");
 const chai = require("chai");
-const jwt = require("jsonwebtoken");
-
-const { loginUser, registerUser } = require("../functions/authentication/user");
-const { addItem } = require("../functions/shop_files/items");
-const CustomMid = require("../functions/middleware/allAuth");
-
 const expect = chai.expect;
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
+
+const { loginUser, registerUser } = require("../functions/authentication/user");
+
+const {
+   addItem,
+   getItems 
+  } = require("../functions/shop_files/items");
+
+const CustomMid = require("../functions/middleware/allAuth");
+const User = require("../functions/models/userModel");
 const app = require("../index");
 
 const userData = {
@@ -17,24 +21,39 @@ const userData = {
   password: "1234test",
   role: "merchant",
 };
+const itemData = {
+  name: "toy",
+  price: 200,
+};
 
-const User = require("../functions/models/userModel");
 
-describe('Creating user', () => {
-    it("creates new user", (done) => {
-       chai.request(app).post("/api/v1/signup", registerUser).send(userData).then(res => {
-           expect(res).to.have.status(200)
-           done()
-       }).catch(err => {
-           done(err)
-       })
+const getToken = async () => {
+  const { email, password } = userData;
+  const user = await User.findByCredentials(email, password);
+  const token = await user.generateAuthToken();
+  const authHeader = `Bearer ${token}`;
+  return authHeader;
+};
 
-    })
-
-})
+describe("Creating user", () => {
+  it("creates new user", async () => {
+  await User.find().deleteOne()
+    chai
+      .request(app)
+      .post("/api/v1/signup", registerUser)
+      .send(userData)
+      .then((res) => {
+        expect(res).to.have.status(200);
+        assert(res.body.data && res.body.token);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+});
 
 describe("Login in User", () => {
-  it("logins in a user", (done) => {
+  it("logins in a user", () => {
     const { email, password } = userData;
     const loginCredentials = { email: email, password: password };
     chai
@@ -45,35 +64,41 @@ describe("Login in User", () => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         assert(res.body.data && res.body.token);
-          done();
       });
   });
 });
 
-const itemData = {
-  name: "toy",
-  price: 200,
-};
-
-// const userId = id
-describe("Creating an item", () => {
+describe("Creating item", () => {
   it("creates a new item", async () => {
     try {
-      const { email, password } = userData;
-      const user = await User.findByCredentials(email, password);
-
-      const token = await user.generateAuthToken();
-      const authHeader = `Bearer ${token}`;
+      const token = await getToken();
       chai
         .request(app)
         .post(`/api/v1/item/`, CustomMid, addItem)
-        .set("authorization", `${authHeader}`)
+        .set("authorization", `${token}`)
         .send(itemData)
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           assert(res.body.item && res.body.user);
-          //   done();
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+});
+
+describe("Getting items", () => {
+  it("gets all items", async () => {
+    try {
+      const token = await getToken();
+      chai
+        .request(app)
+        .get(`/api/v1/item/`, CustomMid, getItems)
+        .set("authorization", `${token}`)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.have.status(200);
         });
     } catch (error) {
       console.error(error);
