@@ -14,20 +14,17 @@ app.use(express.json())
 // custom functions
 const {registerUser,loginUser} = require("./functions/authentication/user")
 const AuthMidd = require("./functions/middleware/allAuth")
-const {addItem}= require("./functions/shop_files/items")
+const {addItem, getItems}= require("./functions/shop_files/items")
 
-// test function for the middleware
 
 // routes
 app.post("/api/v1/signup", registerUser)
 app.post("/api/v1/login", loginUser)
 
-
-
-// test route for the middleware
-app.post("/api/v1/item", AuthMidd, addItem)
-
-
+//   add and get items
+app.route("/api/v1/item")
+.post(AuthMidd,addItem)
+.get(AuthMidd,getItems)
 
 
 const PORT = process.env.PORT || 8080;
