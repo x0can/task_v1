@@ -13,7 +13,6 @@ module.exports = (req,res,next) => {
 
     const decoded = jwt.verify(idToken, process.env.JWT_KEY)
     const {id, iat} = decoded
-    console.log(id)
 
     User.findById(id).then(user=> {
     req.user = user    
