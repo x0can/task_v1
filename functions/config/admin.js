@@ -17,11 +17,11 @@ exports.connectDB =  () => {
         console.log('Connection Successful!')
     });
 
-    beforeEach((done) => {
-        mongoose.connection.collections.users.drop(() => {
-            done();
-        })
-    })   
+    // beforeEach((done) => {
+    //     mongoose.connection.collections.users.drop(() => {
+    //         done();
+    //     })
+    // })   
 
 }
 
