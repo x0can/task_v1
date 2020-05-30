@@ -6,10 +6,7 @@ chai.use(chaiHttp);
 
 const { loginUser, registerUser } = require("../functions/authentication/user");
 
-const {
-   addItem,
-   getItems 
-  } = require("../functions/shop_files/items");
+const { addItem, getItems } = require("../functions/shop_files/items");
 
 const CustomMid = require("../functions/middleware/allAuth");
 const User = require("../functions/models/userModel");
@@ -26,7 +23,6 @@ const itemData = {
   price: 200,
 };
 
-
 const getToken = async () => {
   const { email, password } = userData;
   const user = await User.findByCredentials(email, password);
@@ -37,7 +33,7 @@ const getToken = async () => {
 
 describe("Creating user", () => {
   it("creates new user", async () => {
-  await User.find().deleteOne()
+    await User.find().deleteOne();
     chai
       .request(app)
       .post("/api/v1/signup", registerUser)
@@ -51,6 +47,23 @@ describe("Creating user", () => {
       });
   });
 });
+
+
+describe("Fails to create user", () => {
+  it("fails to create new user", async () => {
+    chai
+      .request(app)
+      .post("/api/v1/signup", registerUser)
+      .send(userData)
+      .then((res) => {
+        expect(res).to.have.status(400);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+});
+
 
 describe("Login in User", () => {
   it("logins in a user", () => {
@@ -67,6 +80,25 @@ describe("Login in User", () => {
       });
   });
 });
+
+
+describe("Fails to create item", () => {
+  it("fails to post item", async () => {
+    try {
+      chai
+        .request(app)
+        .post(`/api/v1/item/`, CustomMid, addItem)
+        .send(itemData)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.have.status(403);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+});
+
 
 describe("Creating item", () => {
   it("creates a new item", async () => {
@@ -99,6 +131,24 @@ describe("Getting items", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+});
+
+
+describe("Fails to get items", () => {
+  it("fails to get items", async () => {
+    try {
+      chai
+        .request(app)
+        .post(`/api/v1/item/`, CustomMid, addItem)
+        .send(itemData)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.have.status(403);
         });
     } catch (error) {
       console.error(error);
