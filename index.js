@@ -14,7 +14,7 @@ app.use(express.json())
 // custom functions
 const {registerUser,loginUser} = require("./functions/authentication/user")
 const AuthMidd = require("./functions/middleware/allAuth")
-
+const {addItem}= require("./functions/shop_files/items")
 
 // test function for the middleware
 
@@ -22,8 +22,10 @@ const AuthMidd = require("./functions/middleware/allAuth")
 app.post("/api/v1/signup", registerUser)
 app.post("/api/v1/login", loginUser)
 
+
+
 // test route for the middleware
-app.post("/api/v1/test", AuthMidd)
+app.post("/api/v1/item", AuthMidd, addItem)
 
 
 
