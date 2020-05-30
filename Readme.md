@@ -6,8 +6,7 @@
 >* npm install
 
 ## Config
-# create .env file in config and configure
->* mongoose DATABASE_URI
->* JWT_KEY
+# create .env and add
+>* JWT_KEY=randomstring 
 >* NODE_ENV=development
 >* PORT=5000
