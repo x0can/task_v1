@@ -15,6 +15,7 @@ module.exports = (req,res,next) => {
 
     User.findById(id).then(user=> {
     req.user = user    
+
     return next()
     }).catch(err=> {
         console.error(err)
