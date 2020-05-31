@@ -24,6 +24,8 @@ const itemData = {
   price: 200,
 };
 
+const itemId = "5ed34415edfd7516c2d527b0"
+
 const getToken = async () => {
   const { email, password } = userData;
   const user = await User.findByCredentials(email, password);
@@ -175,4 +177,43 @@ describe("Fails to add order", () => {
   });
 });
 
+describe("Creates an order", () => {
+ 
+  it("creates a new order", async ()=> {
+    const token = await getToken();
+   try {
+    chai
+    .request(app)
+    .post(`/api/v1/order/${itemId}`, CustomMid, addOrder)
+    .set("authorization", `${token}`)
+    .end((err, res) => {
+      expect(err).to.be.null
+      expect(res).to.have.status(200)
+    })
+   } catch (error) {
+    console.error(error);
+   }
+  })
+})
+
+describe("Updates order quantity", () => {
+ 
+  it("updates order", async ()=> {
+    const token = await getToken();
+   try {
+    chai
+    .request(app)
+    .post(`/api/v1/order/${itemId}`, CustomMid, addOrder)
+    .set("authorization", `${token}`)
+    .end((err, res) => {
+      expect(err).to.be.null
+      expect(res).to.have.status(200)
+    })
+   } catch (error) {
+    console.error(error);
+   }
+  })
+})
+
+// describe()
 
