@@ -7,14 +7,17 @@ exports.addOrder = async (req, res) => {
     });
 
     Order.findOne({ user_id: req.user._id })
+
       .then(async (response) => {
         if (response && response !== null && response.items.length > 0) {
           await Order.update(
             { _id: `${response._id}`, "items._id": itemBought._id },
-            { $inc: { "items.$.amount": 1 } }
+            { $inc: { "items.$.quantity": 1 } }
           )
+
             .then(async (data) => {
               const { nModified } = data;
+
               if (nModified === 1) {
                 Order.findOne({ user_id: req.user._id })
                   .then(async (orderDetails) => {
@@ -41,7 +44,6 @@ exports.addOrder = async (req, res) => {
           await newOrder.save();
           await Order.findOne({ user_id: newOrder.user_id })
             .then((new_order) => {
-              console.log(new_order);
               new_order.items.push(itemBought);
               new_order.save();
               return res.status(200).json(new_order);
