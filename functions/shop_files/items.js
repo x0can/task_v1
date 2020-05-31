@@ -9,7 +9,7 @@ exports.addItem = async (req, res) => {
       name: req.body.name,
       price: req.body.price,
       userId: req.user._id,
-      amount: 0
+      quantity: 0
     });
 
     itemData.save();
