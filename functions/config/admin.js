@@ -10,6 +10,7 @@ mongoose.connect(url, {
     useNewUrlParser: true
 })
 
+
 exports.connectDB =  () => {
     mongoose.connection
     .on('error', console.error.bind(console, 'connection error'))
