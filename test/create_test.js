@@ -7,6 +7,7 @@ chai.use(chaiHttp);
 const { loginUser, registerUser } = require("../functions/authentication/user");
 
 const { addItem, getItems } = require("../functions/shop_files/items");
+const {addOrder} = require("../functions/Order/order")
 
 const CustomMid = require("../functions/middleware/allAuth");
 const User = require("../functions/models/userModel");
@@ -155,3 +156,23 @@ describe("Fails to get items", () => {
     }
   });
 });
+
+
+describe("Fails to add order", () => {
+  it("fails to make an order", async () => {
+    try {
+      chai
+        .request(app)
+        .post(`/api/v1/order/:itemId`, CustomMid, addOrder)
+        .send(itemData)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.have.status(403);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  });
+});
+
+
