@@ -15,6 +15,7 @@ app.use(express.json())
 const {registerUser,loginUser} = require("./functions/authentication/user")
 const AuthMidd = require("./functions/middleware/allAuth")
 const {addItem, getItems}= require("./functions/shop_files/items")
+const {addOrder}  = require("./functions/Order/order")
 
 
 // routes
@@ -22,9 +23,13 @@ app.post("/api/v1/signup", registerUser)
 app.post("/api/v1/login", loginUser)
 
 //   add and get items
+app.post("/api/v1/order/:itemId", AuthMidd, addOrder)
+
 app.route("/api/v1/item")
 .post(AuthMidd,addItem)
 .get(AuthMidd,getItems)
+
+
 
 
 const PORT = process.env.PORT || 8080;
