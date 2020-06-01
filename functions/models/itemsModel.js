@@ -19,7 +19,6 @@ const ItemsSchema = mongoose.Schema({
   quantity: {
     type: Number,
   }
-
   
 })
 
