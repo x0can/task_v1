@@ -2,7 +2,6 @@ const Items = require("../models/itemsModel");
 const User = require("../models/userModel");
 
 exports.addItem = async (req, res) => {
-  const { price, name } = req.body;
   let data = {};
   try {
     let itemData = Items({
@@ -29,6 +28,7 @@ exports.addItem = async (req, res) => {
     return res.status(500).json({ general: "Something went wrong" });
   }
 };
+
 
 exports.getItems = async (req, res) => {
   let itemsData = [];
