@@ -20,12 +20,14 @@ const {addOrder,deleteOrder,getOrder}  = require("./functions/Order/order")
 app.post("/api/v1/signup", registerUser)
 app.post("/api/v1/login", loginUser)
 
+
 //   add and get items
 app.route("/api/v1/order/:itemId")
 .post( AuthMidd, addOrder)
 .delete( AuthMidd, deleteOrder)
 
 app.get("/api/v1/order", AuthMidd, getOrder )
+
 
 app.route("/api/v1/item")
 .post(AuthMidd,addItem)
