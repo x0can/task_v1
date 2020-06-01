@@ -6,7 +6,7 @@ chai.use(chaiHttp);
 
 const { loginUser, registerUser } = require("../functions/authentication/user");
 
-const { addItem, getItems } = require("../functions/shop_files/items");
+const { addItem, getItems } = require("../functions/Items/items");
 const {addOrder} = require("../functions/Order/order")
 
 const CustomMid = require("../functions/middleware/allAuth");
@@ -34,6 +34,9 @@ const getToken = async () => {
   return authHeader;
 };
 
+
+{/*test cases for authenticating user*/}
+
 describe("Creating user", () => {
   it("creates new user", async () => {
     await User.find().deleteOne();
@@ -50,6 +53,7 @@ describe("Creating user", () => {
       });
   });
 });
+
 
 
 describe("Fails to create user", () => {
@@ -85,6 +89,9 @@ describe("Login in User", () => {
 });
 
 
+
+{/*test cases for CRUD operations item */}
+
 describe("Fails to create item", () => {
   it("fails to post item", async () => {
     try {
@@ -101,6 +108,7 @@ describe("Fails to create item", () => {
     }
   });
 });
+
 
 
 describe("Creating item", () => {
@@ -159,6 +167,9 @@ describe("Fails to get items", () => {
   });
 });
 
+
+
+{/*test cases for ordering */}
 
 describe("Fails to add order", () => {
   it("fails to make an order", async () => {
